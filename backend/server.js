@@ -413,6 +413,11 @@ app.use((req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`BIMS Node Backend Proxy listening on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`BIMS Node Backend Proxy listening on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
+
