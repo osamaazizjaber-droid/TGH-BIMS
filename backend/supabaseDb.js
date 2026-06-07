@@ -603,7 +603,7 @@ module.exports = {
   },
 
   saveTemplate: async (userEmail, t) => {
-    await checkUserPermission(userEmail, ["System Administrator"]);
+    await checkUserPermission(userEmail, ["System Administrator", "Project Manager"]);
     const dbTemp = mapTemplateToDb(t);
     
     const { error } = await supabase
@@ -617,7 +617,7 @@ module.exports = {
   },
 
   deleteTemplate: async (userEmail, name) => {
-    await checkUserPermission(userEmail, ["System Administrator"]);
+    await checkUserPermission(userEmail, ["System Administrator", "Project Manager"]);
     const { error } = await supabase
       .from('templates')
       .delete()

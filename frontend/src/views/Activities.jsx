@@ -269,23 +269,86 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
     }
   };
 
+  const handleFormKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      const target = e.target;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT')) {
+        e.preventDefault();
+        const placeholderText = target.placeholder || '';
+        if (
+          placeholderText.includes('Pre-Test Score') ||
+          placeholderText.includes('pre_test_score') ||
+          placeholderText.includes('comma separated')
+        ) {
+          handleAddField();
+        }
+      }
+    }
+  };
+
   const handleSaveTemplate = async (e) => {
     e.preventDefault();
     if (!editingTemplate.templateName) {
       return showToast('Template name is required.', 'warning');
     }
-    if (editingTemplate.fields.length === 0) {
+
+    let finalFields = [...editingTemplate.fields];
+
+    // Auto-append field if the user has content in the Field Builder inputs
+    if (newField.label.trim() !== '' || newField.name.trim() !== '') {
+      if (!newField.name || !newField.label) {
+        return showToast('Please complete or clear the field currently being designed.', 'warning');
+      }
+      
+      const fieldKey = newField.name.toLowerCase().trim().replace(/[^a-z0-9_]/g, '');
+      const isDuplicate = editingTemplate.fields.some((f, i) => f.name === fieldKey && i !== editingFieldIdx);
+      if (isDuplicate) {
+        return showToast('Field key must be unique.', 'warning');
+      }
+
+      if (newField.type === 'Dropdown' && (!newField.optionsString || newField.optionsString.trim() === '')) {
+        return showToast('Please enter options for the Dropdown field.', 'warning');
+      }
+
+      const fieldObj = {
+        name: fieldKey,
+        label: newField.label.trim(),
+        type: newField.type,
+        required: newField.required,
+        ...(newField.type === 'Dropdown' ? { 
+          options: newField.optionsString.split(',').map(o => o.trim()).filter(o => o !== '') 
+        } : {})
+      };
+
+      if (editingFieldIdx !== null && editingFieldIdx !== undefined) {
+        finalFields[editingFieldIdx] = fieldObj;
+      } else {
+        finalFields.push(fieldObj);
+      }
+    }
+
+    if (finalFields.length === 0) {
       return showToast('Please add at least one custom field.', 'warning');
     }
 
     setTemplateSubmitting(true);
     try {
-      await api.saveTemplate(editingTemplate);
+      await api.saveTemplate({
+        ...editingTemplate,
+        fields: finalFields
+      });
       showToast(`Template "${editingTemplate.templateName}" saved successfully!`, 'success');
       setEditingTemplate({
         templateName: '',
         description: '',
         fields: []
+      });
+      setNewField({
+        name: '',
+        label: '',
+        type: 'Text',
+        optionsString: '',
+        required: false
       });
       setEditingFieldIdx(null);
       setIsKeyManuallyEdited(false);
@@ -474,7 +537,7 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                 </div>
               </div>
               
-              <form onSubmit={handleSaveTemplate}>
+              <form onSubmit={handleSaveTemplate} onKeyDown={handleFormKeyDown}>
                 <div className="form-group mb-3">
                   <label className="form-label fw-bold">Template Type Name *</label>
                   <input 
@@ -684,20 +747,27 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
 
                   <button 
                     type="button" 
-                    className="btn btn-sm btn-secondary w-100"
+                    className={`btn btn-sm ${editingFieldIdx !== null ? 'btn-warning' : 'btn-secondary'} w-100`}
                     onClick={handleAddField}
                   >
                     <i className="bi bi-plus-lg"></i> {editingFieldIdx !== null ? 'Update Field Schema' : 'Append Field to Schema'}
                   </button>
                 </div>
 
-                <div className="d-flex justify-content-end gap-2">
-                  {editingTemplate.templateName && (
+                <div className="d-flex justify-content-end gap-2 mt-4">
+                  {(editingTemplate.templateName || editingTemplate.fields.length > 0 || newField.label.trim() !== '') && (
                     <button 
                       type="button" 
                       className="btn btn-secondary"
                       onClick={() => {
                         setEditingTemplate({ templateName: '', description: '', fields: [] });
+                        setNewField({
+                          name: '',
+                          label: '',
+                          type: 'Text',
+                          optionsString: '',
+                          required: false
+                        });
                         setEditingFieldIdx(null);
                         setIsKeyManuallyEdited(false);
                       }}
@@ -709,7 +779,7 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                   <button 
                     type="submit" 
                     className="btn btn-primary"
-                    disabled={templateSubmitting || editingTemplate.fields.length === 0}
+                    disabled={templateSubmitting || (editingTemplate.fields.length === 0 && !newField.label.trim())}
                   >
                     {templateSubmitting ? (
                       <>
