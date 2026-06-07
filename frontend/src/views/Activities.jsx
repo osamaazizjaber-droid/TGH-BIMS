@@ -79,6 +79,8 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
   const [templateSubmitting, setTemplateSubmitting] = useState(false);
   const [templateSearch, setTemplateSearch] = useState('');
   const [expandedTemplate, setExpandedTemplate] = useState(null);
+  const [editingFieldIdx, setEditingFieldIdx] = useState(null);
+  const [isKeyManuallyEdited, setIsKeyManuallyEdited] = useState(false);
 
   useEffect(() => {
     // Fetch projects first
@@ -172,6 +174,35 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
   };
 
   // Template Builder logic
+  const handleLoadFieldForEdit = (idx) => {
+    const field = editingTemplate.fields[idx];
+    setEditingFieldIdx(idx);
+    setNewField({
+      name: field.name,
+      label: field.label,
+      type: field.type,
+      optionsString: field.options ? field.options.join(', ') : '',
+      required: !!field.required
+    });
+    setIsKeyManuallyEdited(true); // Prevent auto-overwriting loaded key
+  };
+
+  const handleMoveField = (index, direction) => {
+    const fields = [...editingTemplate.fields];
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= fields.length) return;
+    
+    // Swap fields
+    const temp = fields[index];
+    fields[index] = fields[targetIndex];
+    fields[targetIndex] = temp;
+
+    setEditingTemplate(prev => ({
+      ...prev,
+      fields
+    }));
+  };
+
   const handleAddField = () => {
     if (!newField.name || !newField.label) {
       return showToast('Please enter field key and field label.', 'warning');
@@ -180,8 +211,14 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
     // Normalize field key
     const fieldKey = newField.name.toLowerCase().trim().replace(/[^a-z0-9_]/g, '');
     
-    if (editingTemplate.fields.some(f => f.name === fieldKey)) {
+    // Check uniqueness excluding the index being edited
+    const isDuplicate = editingTemplate.fields.some((f, i) => f.name === fieldKey && i !== editingFieldIdx);
+    if (isDuplicate) {
       return showToast('Field key must be unique.', 'warning');
+    }
+
+    if (newField.type === 'Dropdown' && (!newField.optionsString || newField.optionsString.trim() === '')) {
+      return showToast('Please enter options for the Dropdown field.', 'warning');
     }
 
     const fieldObj = {
@@ -194,12 +231,20 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
       } : {})
     };
 
-    setEditingTemplate(prev => ({
-      ...prev,
-      fields: [...prev.fields, fieldObj]
-    }));
+    setEditingTemplate(prev => {
+      const updatedFields = [...prev.fields];
+      if (editingFieldIdx !== null && editingFieldIdx !== undefined) {
+        updatedFields[editingFieldIdx] = fieldObj;
+      } else {
+        updatedFields.push(fieldObj);
+      }
+      return {
+        ...prev,
+        fields: updatedFields
+      };
+    });
 
-    // Reset field input
+    // Reset field builder inputs
     setNewField({
       name: '',
       label: '',
@@ -207,6 +252,8 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
       optionsString: '',
       required: false
     });
+    setEditingFieldIdx(null);
+    setIsKeyManuallyEdited(false);
   };
 
   const handleRemoveField = (idx) => {
@@ -214,6 +261,12 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
       ...prev,
       fields: prev.fields.filter((_, i) => i !== idx)
     }));
+    if (editingFieldIdx === idx) {
+      setEditingFieldIdx(null);
+      setIsKeyManuallyEdited(false);
+    } else if (editingFieldIdx > idx) {
+      setEditingFieldIdx(prev => prev - 1);
+    }
   };
 
   const handleSaveTemplate = async (e) => {
@@ -234,6 +287,8 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
         description: '',
         fields: []
       });
+      setEditingFieldIdx(null);
+      setIsKeyManuallyEdited(false);
       fetchTemplatesList();
     } catch (err) {
       showToast(err.message || 'Failed to save template.', 'danger');
@@ -461,6 +516,7 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                         <div 
                           key={idx} 
                           className="d-flex align-items-center justify-content-between p-3 bg-app rounded border border-light"
+                          style={editingFieldIdx === idx ? { border: '1px solid var(--color-warning)', boxShadow: '0 0 8px rgba(255, 193, 7, 0.2)' } : {}}
                         >
                           <div>
                             <span className="badge badge-primary me-2">{field.type}</span>
@@ -473,14 +529,42 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                               </div>
                             )}
                           </div>
-                          <button 
-                            type="button" 
-                            className="btn btn-sm btn-link text-danger p-0"
-                            onClick={() => handleRemoveField(idx)}
-                            title="Remove Field"
-                          >
-                            <i className="bi bi-x-circle-fill fs-5"></i>
-                          </button>
+                          <div className="d-flex align-items-center gap-2">
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-link text-secondary p-0"
+                              onClick={() => handleMoveField(idx, -1)}
+                              disabled={idx === 0}
+                              title="Move Field Up"
+                            >
+                              <i className="bi bi-arrow-up-circle fs-5"></i>
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-link text-secondary p-0"
+                              onClick={() => handleMoveField(idx, 1)}
+                              disabled={idx === editingTemplate.fields.length - 1}
+                              title="Move Field Down"
+                            >
+                              <i className="bi bi-arrow-down-circle fs-5"></i>
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-link text-primary p-0"
+                              onClick={() => handleLoadFieldForEdit(idx)}
+                              title="Edit Field Schema"
+                            >
+                              <i className="bi bi-pencil-circle fs-5"></i>
+                            </button>
+                            <button 
+                              type="button" 
+                              className="btn btn-sm btn-link text-danger p-0"
+                              onClick={() => handleRemoveField(idx)}
+                              title="Remove Field"
+                            >
+                              <i className="bi bi-x-circle-fill fs-5"></i>
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -492,7 +576,7 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                 {/* FIELD BUILDER BOX */}
                 <div className="p-3 bg-app rounded border mb-4">
                   <h6 className="fw-bold mb-3 text-warning">
-                    <i className="bi bi-plus-circle"></i> Add Custom Form Field
+                    <i className="bi bi-plus-circle"></i> {editingFieldIdx !== null ? 'Modify Custom Form Field' : 'Add Custom Form Field'}
                   </h6>
                   
                   <div className="form-grid mb-3">
@@ -505,11 +589,11 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                         value={newField.label}
                         onChange={(e) => {
                           const lbl = e.target.value;
-                          const key = lbl.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_').replace(/_+/g, '_');
+                          const key = lbl.toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
                           setNewField(prev => ({ 
                             ...prev, 
                             label: lbl,
-                            name: prev.name === '' || prev.name === key.substring(0, key.length - 1) ? key : prev.name
+                            name: isKeyManuallyEdited ? prev.name : key
                           }));
                         }}
                       />
@@ -521,10 +605,13 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                         className="form-control form-control-sm"
                         placeholder="e.g. pre_test_score"
                         value={newField.name}
-                        onChange={(e) => setNewField(prev => ({ 
-                          ...prev, 
-                          name: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') 
-                        }))}
+                        onChange={(e) => {
+                          setIsKeyManuallyEdited(true);
+                          setNewField(prev => ({ 
+                            ...prev, 
+                            name: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') 
+                          }));
+                        }}
                       />
                       <small className="text-muted" style={{ fontSize: '0.75rem' }}>Letters, numbers, underscores only.</small>
                     </div>
@@ -575,12 +662,32 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                     </div>
                   )}
 
+                  {editingFieldIdx !== null && (
+                    <button 
+                      type="button" 
+                      className="btn btn-sm btn-outline-secondary w-100 mb-2"
+                      onClick={() => {
+                        setEditingFieldIdx(null);
+                        setNewField({
+                          name: '',
+                          label: '',
+                          type: 'Text',
+                          optionsString: '',
+                          required: false
+                        });
+                        setIsKeyManuallyEdited(false);
+                      }}
+                    >
+                      Cancel Field Edit
+                    </button>
+                  )}
+
                   <button 
                     type="button" 
                     className="btn btn-sm btn-secondary w-100"
                     onClick={handleAddField}
                   >
-                    <i className="bi bi-plus-lg"></i> Append Field to Schema
+                    <i className="bi bi-plus-lg"></i> {editingFieldIdx !== null ? 'Update Field Schema' : 'Append Field to Schema'}
                   </button>
                 </div>
 
@@ -589,7 +696,11 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                     <button 
                       type="button" 
                       className="btn btn-secondary"
-                      onClick={() => setEditingTemplate({ templateName: '', description: '', fields: [] })}
+                      onClick={() => {
+                        setEditingTemplate({ templateName: '', description: '', fields: [] });
+                        setEditingFieldIdx(null);
+                        setIsKeyManuallyEdited(false);
+                      }}
                       disabled={templateSubmitting}
                     >
                       Clear / New
@@ -677,11 +788,15 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                             <div className="d-flex gap-2">
                               <button 
                                 className="btn btn-sm btn-outline-primary py-1 px-2"
-                                onClick={() => setEditingTemplate({
-                                  templateName: t.templateName,
-                                  description: t.description || '',
-                                  fields: t.fields || []
-                                })}
+                                onClick={() => {
+                                  setEditingTemplate({
+                                    templateName: t.templateName,
+                                    description: t.description || '',
+                                    fields: t.fields || []
+                                  });
+                                  setEditingFieldIdx(null);
+                                  setIsKeyManuallyEdited(false);
+                                }}
                                 title="Edit Template Structure"
                               >
                                 <i className="bi bi-pencil-square"></i> Edit
