@@ -1,0 +1,1305 @@
+[
+  {
+    "templateName": "CBC Capacity Building",
+    "description": "Community-based protection capacity building training with pre/post testing",
+    "fields": [
+      {
+        "name": "pre_test_score",
+        "label": "Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "post_test_score",
+        "label": "Post-Test Score",
+        "type": "Number",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Community-led Events",
+    "description": "Community-organised events and mobilisation sessions",
+    "fields": [
+      {
+        "name": "event_name",
+        "label": "Event Name",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Evidence)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Partnering Program",
+    "description": "Partnership and capacity exchange programme with pre/post assessment",
+    "fields": [
+      {
+        "name": "pre_test_score",
+        "label": "Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "post_test_score",
+        "label": "Post-Test Score",
+        "type": "Number",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Stakeholders Training",
+    "description": "Training sessions delivered to government or sector stakeholders",
+    "fields": [
+      {
+        "name": "pre_test_score",
+        "label": "Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "post_test_score",
+        "label": "Post-Test Score",
+        "type": "Number",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "AGT and Youth Resilience",
+    "description": "Adolescent Girls Toolkit and Youth Resilience programme sessions",
+    "fields": [
+      {
+        "name": "pre_test_score",
+        "label": "Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "post_test_score",
+        "label": "Post-Test Score",
+        "type": "Number",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Cash for Protection",
+    "description": "Cash and in-kind assistance provided for protection-related needs",
+    "fields": [
+      {
+        "name": "case_code",
+        "label": "Case Code",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "case_type",
+        "label": "Case Type",
+        "type": "Dropdown",
+        "options": [
+          "GBV",
+          "Child Protection",
+          "Legal",
+          "Psychosocial",
+          "Other"
+        ],
+        "required": true
+      },
+      {
+        "name": "type_of_support",
+        "label": "Type of Support",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "cash_support_cost_iqd",
+        "label": "Cash Support Cost (IQD)",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Cash Receipt)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "School Kits Distribution",
+    "description": "Distribution of school supply kits to children in need",
+    "fields": [
+      {
+        "name": "caregiver_name",
+        "label": "Caregiver Name",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "child_with_disability",
+        "label": "Child with Disabilities?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": true
+      },
+      {
+        "name": "school_status",
+        "label": "School Status",
+        "type": "Dropdown",
+        "options": [
+          "In-school",
+          "Out-of-school"
+        ],
+        "required": true
+      },
+      {
+        "name": "school_name",
+        "label": "School Name (if applicable)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "grade_class",
+        "label": "Grade / Class",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Evidence)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Rehab. of Youth Centers",
+    "description": "Rehabilitation or equipping of youth and community centres",
+    "fields": [
+      {
+        "name": "center_name",
+        "label": "Name of Rehabilitated Youth Center",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "rehab_type",
+        "label": "Type of Rehabilitation",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "village",
+        "label": "Village",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "gps",
+        "label": "GPS Coordinates",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "contractor_name",
+        "label": "Contractor Name (Company)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "rehab_cost",
+        "label": "Cost of Rehabilitation",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Receiving Letter)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Training of Farmers",
+    "description": "Agricultural training for farmers with pre/post assessment and GPS tracking",
+    "fields": [
+      {
+        "name": "pre_test_score",
+        "label": "Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "post_test_score",
+        "label": "Post-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Attendance Sheet)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "gps_training_hall",
+        "label": "GPS of Training Hall",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Storage of the Crops",
+    "description": "Storage services provided to farmers for their produce",
+    "fields": [
+      {
+        "name": "crop_type",
+        "label": "Crop Type (e.g., tomato, cucumber)",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "quantity_kg",
+        "label": "Quantity (kg)",
+        "type": "Number",
+        "required": true
+      },
+      {
+        "name": "date_check_in",
+        "label": "Date of Check-in",
+        "type": "Date",
+        "required": false
+      },
+      {
+        "name": "date_check_out",
+        "label": "Date of Check-out",
+        "type": "Date",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Operators Info",
+    "description": "Information tracking for facility and equipment operators",
+    "fields": [
+      {
+        "name": "representation",
+        "label": "Representation / Organisation",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "function",
+        "label": "Function / Role",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Stakeholders Info",
+    "description": "Stakeholder mapping and engagement tracking",
+    "fields": [
+      {
+        "name": "representation",
+        "label": "Representation / Organisation",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "function",
+        "label": "Function / Role",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Psychosocial Support (PSS)",
+    "description": "Structured PSS sessions including AGT, Youth Resilience, Child Resilience, Life Skills, and recreational activities",
+    "fields": [
+      {
+        "name": "pss_activity_type",
+        "label": "PSS Activity Type",
+        "type": "Dropdown",
+        "options": [
+          "Adolescent Girls Toolkit",
+          "Youth Resilience",
+          "Child Resilience",
+          "Life Skills",
+          "Little Fellow",
+          "Recreational Activities",
+          "Individual PSS",
+          "Parents Meeting"
+        ],
+        "required": true
+      },
+      {
+        "name": "sessions_attended",
+        "label": "Number of Sessions Attended",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "counted_as_bnf",
+        "label": "Counted as Beneficiary?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Awareness Sessions",
+    "description": "Community awareness-raising sessions on protection and social topics",
+    "fields": [
+      {
+        "name": "awareness_topic",
+        "label": "Awareness Topic",
+        "type": "Text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "templateName": "Out of School Children",
+    "description": "Identification and support for children who have dropped out of school",
+    "fields": [
+      {
+        "name": "has_disability",
+        "label": "Do you have any disabilities?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "disability_details",
+        "label": "Disability Details (if yes)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "school_name",
+        "label": "School Name",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "school_location",
+        "label": "School Location",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "date_of_dropout",
+        "label": "Date of Drop-out",
+        "type": "Date",
+        "required": false
+      },
+      {
+        "name": "class_grade",
+        "label": "Class (Grade)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "reason_of_dropout",
+        "label": "Reason of Drop-out",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "is_re_enrolled",
+        "label": "Is he/she Re-enrolled?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No",
+          "In Progress"
+        ],
+        "required": false
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Re-enrollment Certificate)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Parenting Skills Program",
+    "description": "Structured parenting skills sessions with attendance tracking and pre/post testing",
+    "fields": [
+      {
+        "name": "has_disability",
+        "label": "Do you have any disabilities?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "disability_details",
+        "label": "Disability Details (if yes)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "session_1",
+        "label": "Session One",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "session_2",
+        "label": "Session Two",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "session_3",
+        "label": "Session Three",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "session_4",
+        "label": "Session Four",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "session_5",
+        "label": "Session Five",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "session_6",
+        "label": "Session Six",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "sessions_attended",
+        "label": "# Sessions Attended",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "counted_as_bnf",
+        "label": "Counted as Beneficiary?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "pre_test_score",
+        "label": "Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "post_test_score",
+        "label": "Post-Test Score",
+        "type": "Number",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "CBC Structures",
+    "description": "Child Protection community-based committee registration and tracking",
+    "fields": [
+      {
+        "name": "has_disability",
+        "label": "Do you have any disabilities?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "disability_details",
+        "label": "Disability Details (if yes)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "committee_name",
+        "label": "Committee Name",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "role_position",
+        "label": "Role / Position",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "representation",
+        "label": "Representation / Organisation",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "date_of_establishment",
+        "label": "Date of Committee Establishment",
+        "type": "Date",
+        "required": false
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Establishment Document)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Capacity Building",
+    "description": "Capacity building and professional training sessions for staff or community members",
+    "fields": [
+      {
+        "name": "has_disability",
+        "label": "Do you have any disabilities?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "disability_details",
+        "label": "Disability Details (if yes)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "training_topic",
+        "label": "Training Topic",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "type_of_bnfs",
+        "label": "Type of Beneficiaries",
+        "type": "Dropdown",
+        "options": [
+          "Staff",
+          "Community Members",
+          "Government",
+          "Mixed"
+        ],
+        "required": false
+      },
+      {
+        "name": "pre_test_score",
+        "label": "Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "post_test_score",
+        "label": "Post-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Attendance Sheet)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Distribution of Learning Materials",
+    "description": "Distribution of educational and learning materials to children, with vulnerability screening",
+    "fields": [
+      {
+        "name": "has_disability",
+        "label": "Do you have any disabilities?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "disability_details",
+        "label": "Disability Details (if yes)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "caregiver_name",
+        "label": "Caregiver Name",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "caregiver_relationship",
+        "label": "Caregiver Relationship to Child",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "caregiver_contact",
+        "label": "Caregiver Contact Number",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "lacks_legal_docs",
+        "label": "Does the child lack legal documents?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "document_type",
+        "label": "Document Type (if lacking)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "at_risk_dropout",
+        "label": "Is the child at risk of dropping out of school?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "dropout_reason",
+        "label": "Reason for Dropout Risk",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "missing_parent",
+        "label": "Is the child missing one of the parents?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "health_problem",
+        "label": "Does the child have any particular health problem?",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "far_from_school",
+        "label": "Is he/she far away from school?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "family_has_income",
+        "label": "Does the family have household income?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "benefits_from_ngos",
+        "label": "Does the family benefit from other NGOs?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "NFE Activities",
+    "description": "Non-Formal Education activities including remedial and catch-up classes with subject-level pre/post tests",
+    "fields": [
+      {
+        "name": "has_disability",
+        "label": "Do you have any disabilities?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "disability_details",
+        "label": "Disability Details (if yes)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "class_grade",
+        "label": "Class / Grade",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "class_type",
+        "label": "Class Type",
+        "type": "Dropdown",
+        "options": [
+          "Remedial Class",
+          "Catch-up Class"
+        ],
+        "required": false
+      },
+      {
+        "name": "maths_pre_test",
+        "label": "Maths – Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "maths_post_test",
+        "label": "Maths – Post-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "arabic_pre_test",
+        "label": "Arabic – Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "arabic_post_test",
+        "label": "Arabic – Post-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "english_pre_test",
+        "label": "English – Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "english_post_test",
+        "label": "English – Post-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "pct_improvement",
+        "label": "% of Significant Improvement",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Tests)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Re-enrolled Children",
+    "description": "Tracking of out-of-school children who have been successfully re-enrolled",
+    "fields": [
+      {
+        "name": "has_disability",
+        "label": "Do you have any disabilities?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "disability_details",
+        "label": "Disability Details (if yes)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "school_name",
+        "label": "School Name",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "class_grade",
+        "label": "Class / Grade",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "school_location",
+        "label": "School Location",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "re_enrollment_date",
+        "label": "Re-enrollment Date",
+        "type": "Date",
+        "required": false
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Re-enrollment Documentation)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Case Management",
+    "description": "Individual case management for protection and vulnerability cases",
+    "fields": [
+      {
+        "name": "has_disability",
+        "label": "Do you have any disabilities?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "disability_details",
+        "label": "Disability Details (if yes)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "is_reopening",
+        "label": "Is it a Reopening?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "reopening_reason",
+        "label": "Reason for Reopening (if yes)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "case_code",
+        "label": "Case Code",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "date_of_identification",
+        "label": "Date of Identification",
+        "type": "Date",
+        "required": false
+      },
+      {
+        "name": "risk_level",
+        "label": "Risk Level",
+        "type": "Dropdown",
+        "options": [
+          "High",
+          "Medium",
+          "Low"
+        ],
+        "required": false
+      },
+      {
+        "name": "main_case_type",
+        "label": "Main Case Type",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "case_type_2",
+        "label": "Case Type 2",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "case_type_3",
+        "label": "Case Type 3",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "consent",
+        "label": "Consent Obtained?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "assessment",
+        "label": "Assessment Completed?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No",
+          "In Progress"
+        ],
+        "required": false
+      },
+      {
+        "name": "case_plan",
+        "label": "Case Plan?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No",
+          "In Progress"
+        ],
+        "required": false
+      },
+      {
+        "name": "follow_up",
+        "label": "Follow-up Conducted?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "num_followups",
+        "label": "Number of Follow-ups",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "need_referral",
+        "label": "Referral Needed?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      },
+      {
+        "name": "support_required",
+        "label": "Support Required",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "referral_to",
+        "label": "Referred To",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "date_last_referral",
+        "label": "Date of Last Referral",
+        "type": "Date",
+        "required": false
+      },
+      {
+        "name": "referral_from",
+        "label": "Referred From",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "transfer_to",
+        "label": "Transfer To",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "date_of_closure",
+        "label": "Date of Closure",
+        "type": "Date",
+        "required": false
+      },
+      {
+        "name": "reason_for_closure",
+        "label": "Reason for Closure",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "case_status",
+        "label": "Case Status",
+        "type": "Dropdown",
+        "options": [
+          "Open",
+          "Closed"
+        ],
+        "required": false
+      },
+      {
+        "name": "notes",
+        "label": "Notes",
+        "type": "Text Area",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Rehab. of Football Field",
+    "description": "Rehabilitation and infrastructure improvement of football fields and youth sport facilities (KU50)",
+    "fields": [
+      {
+        "name": "center_name",
+        "label": "Name of Rehabilitated Youth Center",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "rehab_type",
+        "label": "Type of Rehabilitation",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "village",
+        "label": "Village",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "gps",
+        "label": "GPS Coordinates",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "contractor_name",
+        "label": "Contractor Name (Company)",
+        "type": "Text",
+        "required": false
+      },
+      {
+        "name": "rehab_cost",
+        "label": "Cost of Rehabilitation",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "mov_link",
+        "label": "MoV Link (Receiving Letter)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Youth-Led Initiatives",
+    "description": "Life skills, civic value training, sports tournaments, and outdoor camping activities for at-risk children and youth",
+    "fields": [
+      {
+        "name": "initiatives_title",
+        "label": "Initiatives Title",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "initiatives_location",
+        "label": "Initiatives Location (City)",
+        "type": "Text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Youth-Led Structures",
+    "description": "Support and tracking of youth-led community groups that plan and implement social initiatives",
+    "fields": [
+      {
+        "name": "group_name",
+        "label": "Group Name",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "num_planned_initiatives",
+        "label": "Number of Planned Initiatives",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "num_implemented_initiatives",
+        "label": "Number of Implemented Initiatives",
+        "type": "Number",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Capacity Building of Stakeholders",
+    "description": "Training sessions for teachers, coaches, and detention centre facilitators on child protection, child rights, and psychosocial support",
+    "fields": [
+      {
+        "name": "pre_test_score",
+        "label": "Pre-Test Score",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "post_test_score",
+        "label": "Post-Test Score",
+        "type": "Number",
+        "required": false
+      }
+    ]
+  },
+  {
+    "templateName": "Life Skills and Football Activities",
+    "description": "Structured life skills sessions and football/sports activities with per-session attendance tracking",
+    "fields": [
+      {
+        "name": "school_or_team_name",
+        "label": "Name of School / Team",
+        "type": "Text",
+        "required": true
+      },
+      {
+        "name": "session_1",
+        "label": "Session One",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "session_2",
+        "label": "Session Two",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "session_3",
+        "label": "Session Three",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "session_4",
+        "label": "Session Four",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "session_5",
+        "label": "Session Five",
+        "type": "Dropdown",
+        "options": [
+          "Attended",
+          "Absent"
+        ],
+        "required": false
+      },
+      {
+        "name": "num_sessions",
+        "label": "No. of Sessions Attended",
+        "type": "Number",
+        "required": false
+      },
+      {
+        "name": "counted_as_bnf",
+        "label": "Counted as Beneficiary?",
+        "type": "Dropdown",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "required": false
+      }
+    ]
+  }
+]
