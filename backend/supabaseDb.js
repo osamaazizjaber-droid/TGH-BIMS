@@ -219,6 +219,7 @@ function mapIndicatorToJs(i) {
     numMen: Number(i.num_men) || 0,
     numWomen: Number(i.num_women) || 0,
     totalBeneficiaries: Number(i.total_beneficiaries) || 0,
+    activityType: i.activity_type || "",
     createdAt: i.created_at
   };
 }
@@ -235,7 +236,8 @@ function mapIndicatorToDb(i) {
     bnf_type: i.bnfType || "",
     num_men: numMen,
     num_women: numWomen,
-    total_beneficiaries: numMen + numWomen
+    total_beneficiaries: numMen + numWomen,
+    activity_type: i.activityType || ""
   };
 }
 
@@ -1830,5 +1832,56 @@ module.exports = {
 
     await writeAuditLog(userEmail, "BULK_UPLOAD_INDICATORS", `Bulk-uploaded ${successCount} indicators for ${cleanProject}`, cleanProject, null);
     return { status: "success", successCount, errorCount };
+  },
+
+  syncIndicator: async (userEmail, id) => {
+    await checkUserPermission(userEmail, ["System Administrator", "Project Manager", "MEAL Officer", "Data Entry Officer"]);
+    
+    // 1. Fetch indicator to know project_code and linked activity_type
+    const { data: indicator, error: fetchErr } = await supabase
+      .from('project_indicators')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (fetchErr) throw fetchErr;
+    if (!indicator) throw new Error(`Indicator with ID '${id}' not found.`);
+
+    if (!indicator.activity_type) {
+      throw new Error(`Indicator is not linked to any Activity Type. Edit indicator to link one.`);
+    }
+
+    // 2. Fetch registrations for this project and activity type
+    const { data: registrations, error: regErr } = await supabase
+      .from('registrations')
+      .select('gender')
+      .eq('project_code', indicator.project_code)
+      .eq('activity_type', indicator.activity_type);
+
+    if (regErr) throw regErr;
+
+    // 3. Count by gender
+    const numMen = (registrations || []).filter(r => r.gender === 'Male').length;
+    const numWomen = (registrations || []).filter(r => r.gender === 'Female').length;
+    const total = numMen + numWomen;
+
+    // 4. Update the project indicator target achieved count
+    const { data: updated, error: updateErr } = await supabase
+      .from('project_indicators')
+      .update({
+        achieved_target: total,
+        num_men: numMen,
+        num_women: numWomen,
+        total_beneficiaries: total
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (updateErr) throw updateErr;
+
+    await writeAuditLog(userEmail, "SYNC_INDICATOR", `Synchronized indicator ${id} from registrations (${total} achieved, ${numMen} M, ${numWomen} F)`, indicator.project_code, null);
+    
+    return mapIndicatorToJs(updated);
   }
 };

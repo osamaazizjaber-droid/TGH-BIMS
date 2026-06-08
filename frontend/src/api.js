@@ -154,6 +154,10 @@ const api = {
     request(`/api/indicators/${encodeURIComponent(id)}`, {
       method: 'DELETE'
     }),
+  syncIndicator: (id) => 
+    request(`/api/indicators/${encodeURIComponent(id)}/sync`, {
+      method: 'POST'
+    }),
   bulkUploadIndicators: (projectCode, rows) => 
     request('/api/indicators/bulk', {
       method: 'POST',

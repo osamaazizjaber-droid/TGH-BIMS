@@ -10,6 +10,9 @@ export default function Indicators({ user, showToast }) {
   const [submitting, setSubmitting] = useState(false);
   const [activeSubTab, setActiveSubTab] = useState('list'); // 'list', 'add', 'import'
   const [editingId, setEditingId] = useState(null);
+  const [templates, setTemplates] = useState([]);
+  const [syncingId, setSyncingId] = useState(null);
+  const [syncingAll, setSyncingAll] = useState(false);
 
   // Search filter
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,7 +24,8 @@ export default function Indicators({ user, showToast }) {
     achievedTarget: '',
     bnfType: '',
     numMen: '',
-    numWomen: ''
+    numWomen: '',
+    activityType: ''
   });
 
   // Excel bulk upload state
@@ -41,6 +45,15 @@ export default function Indicators({ user, showToast }) {
       })
       .catch(err => {
         showToast(err.message || 'Failed to load projects list', 'danger');
+      });
+
+    // Fetch templates to link to indicators
+    api.getTemplates()
+      .then(data => {
+        setTemplates(data || []);
+      })
+      .catch(err => {
+        console.error('Failed to load templates list', err);
       });
   }, []);
 
@@ -71,6 +84,50 @@ export default function Indicators({ user, showToast }) {
     }));
   };
 
+  // Sync a single indicator
+  const handleSyncIndicator = async (id) => {
+    setSyncingId(id);
+    try {
+      const updated = await api.syncIndicator(id);
+      showToast(`Indicator synchronized successfully! Reached: ${updated.totalBeneficiaries} total.`, 'success');
+      setRecords(prev => prev.map(r => r.id === id ? updated : r));
+    } catch (err) {
+      showToast(err.message || 'Failed to synchronize achievements.', 'danger');
+    } finally {
+      setSyncingId(null);
+    }
+  };
+
+  // Sync all indicators of active project
+  const handleSyncAllIndicators = async () => {
+    const linkable = records.filter(r => r.activityType);
+    if (linkable.length === 0) {
+      return showToast('No indicators in this project are linked to activity types.', 'warning');
+    }
+
+    setSyncingAll(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const ind of linkable) {
+      try {
+        await api.syncIndicator(ind.id);
+        successCount++;
+      } catch (err) {
+        console.error(`Sync failed for indicator ${ind.id}:`, err);
+        failCount++;
+      }
+    }
+
+    if (successCount > 0) {
+      showToast(`Synced achievements for ${successCount} indicators.${failCount > 0 ? ` Failed: ${failCount}` : ''}`, 'success');
+      await fetchIndicators(selectedProject);
+    } else {
+      showToast('Synchronization failed for linked indicators.', 'danger');
+    }
+    setSyncingAll(false);
+  };
+
   // Create or update indicator
   const handleSubmitForm = async (e) => {
     e.preventDefault();
@@ -87,7 +144,8 @@ export default function Indicators({ user, showToast }) {
         achievedTarget: Number(formData.achievedTarget) || 0,
         bnfType: formData.bnfType,
         numMen: Number(formData.numMen) || 0,
-        numWomen: Number(formData.numWomen) || 0
+        numWomen: Number(formData.numWomen) || 0,
+        activityType: formData.activityType
       };
 
       if (editingId) {
@@ -118,7 +176,8 @@ export default function Indicators({ user, showToast }) {
       achievedTarget: record.achievedTarget,
       bnfType: record.bnfType,
       numMen: record.numMen,
-      numWomen: record.numWomen
+      numWomen: record.numWomen,
+      activityType: record.activityType || ''
     });
     setActiveSubTab('add');
   };
@@ -149,7 +208,8 @@ export default function Indicators({ user, showToast }) {
       achievedTarget: '',
       bnfType: '',
       numMen: '',
-      numWomen: ''
+      numWomen: '',
+      activityType: ''
     });
   };
 
@@ -428,6 +488,25 @@ export default function Indicators({ user, showToast }) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {isPMOrAdmin && (
+                <button
+                  className="btn btn-sm btn-outline-warning"
+                  onClick={handleSyncAllIndicators}
+                  disabled={syncingAll || records.length === 0}
+                  title="Synchronize all indicators linked to activity types"
+                >
+                  {syncingAll ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
+                      Syncing...
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-arrow-repeat"></i> Sync All
+                    </>
+                  )}
+                </button>
+              )}
               <button 
                 className="btn btn-sm btn-success"
                 onClick={handleExportToExcel}
@@ -472,7 +551,7 @@ export default function Indicators({ user, showToast }) {
                     <th>Men Reached</th>
                     <th>Women Reached</th>
                     <th>Total Reached (Calculated)</th>
-                    {isPMOrAdmin && <th style={{ textAlign: 'center', width: '120px' }}>Actions</th>}
+                    {isPMOrAdmin && <th style={{ textAlign: 'center', width: '150px' }}>Actions</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -486,7 +565,18 @@ export default function Indicators({ user, showToast }) {
                     return (
                       <tr key={r.id}>
                         <td style={{ whiteSpace: 'normal', verticalAlign: 'middle' }}>
-                          <strong>{r.indicatorDescription}</strong>
+                          <div className="d-flex flex-column">
+                            <strong>{r.indicatorDescription}</strong>
+                            {r.activityType ? (
+                              <span className="badge mt-1 align-self-start border" style={{ backgroundColor: 'var(--color-info-glow)', color: 'var(--color-info)', borderColor: 'var(--color-info)', textTransform: 'none', letterSpacing: 'normal' }}>
+                                <i className="bi bi-link-45deg"></i> Auto-Sync: {r.activityType}
+                              </span>
+                            ) : (
+                              <span className="badge mt-1 align-self-start border" style={{ backgroundColor: 'var(--border-color)', color: 'var(--text-muted)', borderColor: 'var(--border-color)', textTransform: 'none', letterSpacing: 'normal' }}>
+                                <i className="bi bi-hand-index-thumb"></i> Manual Input
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td style={{ verticalAlign: 'middle' }} className="fw-bold">{r.targetValue}</td>
                         <td style={{ verticalAlign: 'middle' }} className="fw-bold text-success">{r.achievedTarget}</td>
@@ -505,6 +595,20 @@ export default function Indicators({ user, showToast }) {
                         {isPMOrAdmin && (
                           <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                             <div className="d-flex justify-content-center gap-2">
+                              {r.activityType && (
+                                <button 
+                                  className="btn btn-sm btn-outline-warning py-0 px-2"
+                                  onClick={() => handleSyncIndicator(r.id)}
+                                  disabled={syncingId === r.id || syncingAll}
+                                  title="Synchronize achievements"
+                                >
+                                  {syncingId === r.id ? (
+                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
+                                  ) : (
+                                    <i className="bi bi-arrow-repeat"></i>
+                                  )}
+                                </button>
+                              )}
                               <button 
                                 className="btn btn-sm btn-outline-primary py-0 px-2"
                                 onClick={() => handleEditClick(r)}
@@ -567,6 +671,28 @@ export default function Indicators({ user, showToast }) {
               </div>
             </div>
 
+            <div className="row g-3 mb-3">
+              <div className="col-md-12">
+                <label className="form-label">Linked Activity Type (for Automatic Sync)</label>
+                <select
+                  name="activityType"
+                  className="form-select form-control"
+                  value={formData.activityType}
+                  onChange={handleInputChange}
+                >
+                  <option value="">-- Manual Input (No auto-sync) --</option>
+                  {templates.map(t => (
+                    <option key={t.activityType} value={t.activityType}>
+                      {t.activityName} ({t.activityType})
+                    </option>
+                  ))}
+                </select>
+                <div className="form-text text-muted small mt-1">
+                  <i className="bi bi-info-circle text-info"></i> If linked, achieved values and gender breakdown will be synchronized automatically from registrations of this activity type under this project.
+                </div>
+              </div>
+            </div>
+
             <div className="form-group mb-3">
               <label className="form-label">Indicator Description *</label>
               <textarea 
@@ -603,9 +729,16 @@ export default function Indicators({ user, showToast }) {
                   placeholder="Achieved quantity"
                   value={formData.achievedTarget}
                   onChange={handleInputChange}
-                  required
+                  required={!formData.activityType}
                   min="0"
+                  disabled={!!formData.activityType}
+                  style={formData.activityType ? { backgroundColor: 'var(--bg-app)', cursor: 'not-allowed' } : {}}
                 />
+                {formData.activityType && (
+                  <span className="text-info small mt-1">
+                    <i className="bi bi-arrow-repeat"></i> Auto-synced from linked activity
+                  </span>
+                )}
               </div>
             </div>
 
@@ -625,6 +758,8 @@ export default function Indicators({ user, showToast }) {
                       value={formData.numMen}
                       onChange={handleInputChange}
                       min="0"
+                      disabled={!!formData.activityType}
+                      style={formData.activityType ? { backgroundColor: 'var(--bg-app)', cursor: 'not-allowed' } : {}}
                     />
                   </div>
                 </div>
@@ -639,6 +774,8 @@ export default function Indicators({ user, showToast }) {
                       value={formData.numWomen}
                       onChange={handleInputChange}
                       min="0"
+                      disabled={!!formData.activityType}
+                      style={formData.activityType ? { backgroundColor: 'var(--bg-app)', cursor: 'not-allowed' } : {}}
                     />
                   </div>
                 </div>

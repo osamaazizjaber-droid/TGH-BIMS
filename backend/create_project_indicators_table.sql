@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS project_indicators (
   target_value          INTEGER DEFAULT 0,
   achieved_target       INTEGER DEFAULT 0,
   bnf_type              TEXT,
+  activity_type         TEXT,
   num_men               INTEGER DEFAULT 0,
   num_women             INTEGER DEFAULT 0,
   total_beneficiaries   INTEGER DEFAULT 0,

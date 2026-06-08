@@ -285,6 +285,15 @@ app.delete('/api/indicators/:id', authenticateToken, async (req, res) => {
   }
 });
 
+app.post('/api/indicators/:id/sync', authenticateToken, async (req, res) => {
+  try {
+    const result = await db.syncIndicator(req.user.email, req.params.id);
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 app.post('/api/indicators/bulk', authenticateToken, async (req, res) => {
   try {
     const { projectCode, rows } = req.body;

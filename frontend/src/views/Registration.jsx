@@ -129,7 +129,7 @@ export default function Registration({ user, regParams, setRegParams, showToast 
               // Seed initial dynamic form values
               const initialDyn = {};
               template.fields.forEach(f => {
-                initialDyn[f.name] = '';
+                initialDyn[f.name] = f.type === 'Checkbox' ? false : '';
               });
               setDynamicData(initialDyn);
             } else {
@@ -265,7 +265,7 @@ export default function Registration({ user, regParams, setRegParams, showToast 
         
         // Reset dynamic inputs
         const cleanDyn = {};
-        activeTemplateFields.forEach(f => { cleanDyn[f.name] = ''; });
+        activeTemplateFields.forEach(f => { cleanDyn[f.name] = f.type === 'Checkbox' ? false : ''; });
         setDynamicData(cleanDyn);
       }
     } catch (err) {
@@ -754,9 +754,69 @@ export default function Registration({ user, regParams, setRegParams, showToast 
                     {activeTemplateFields.map(field => {
                       const inputName = field.name;
 
+                      // 1. Render Section Header
+                      if (field.type === 'Section Header') {
+                        return (
+                          <div key={inputName} className="mt-4 border-bottom pb-2">
+                            <h5 className="text-primary fw-bold mb-1">{field.label}</h5>
+                            {field.helpText && <small className="text-muted d-block">{field.helpText}</small>}
+                          </div>
+                        );
+                      }
+
+                      // 2. Render Checkbox (as a Switch Toggle)
+                      if (field.type === 'Checkbox') {
+                        return (
+                          <div key={inputName} className="form-check form-switch my-3">
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              id={inputName}
+                              name={inputName}
+                              checked={!!dynamicData[inputName]}
+                              onChange={(e) => setDynamicData(prev => ({ ...prev, [inputName]: e.target.checked }))}
+                            />
+                            <label className="form-check-label fw-bold ms-2 cursor-pointer" htmlFor={inputName}>
+                              {field.label} {field.required && <span className="text-danger">*</span>}
+                            </label>
+                            {field.helpText && <small className="d-block text-muted mt-1">{field.helpText}</small>}
+                          </div>
+                        );
+                      }
+
+                      // 3. Render Radio choice buttons
+                      if (field.type === 'Radio') {
+                        return (
+                          <div key={inputName} className="form-group">
+                            <label className="form-label fw-bold mb-2">{field.label} {field.required && <span className="text-danger">*</span>}</label>
+                            <div className="d-flex flex-wrap gap-3">
+                              {field.options?.map(opt => (
+                                <div key={opt} className="form-check">
+                                  <input
+                                    type="radio"
+                                    className="form-check-input"
+                                    id={`${inputName}-${opt}`}
+                                    name={inputName}
+                                    value={opt}
+                                    checked={dynamicData[inputName] === opt}
+                                    onChange={handleDynamicChange}
+                                    required={field.required}
+                                  />
+                                  <label className="form-check-label ms-1 cursor-pointer" htmlFor={`${inputName}-${opt}`}>
+                                    {opt}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                            {field.helpText && <small className="d-block text-muted mt-1">{field.helpText}</small>}
+                          </div>
+                        );
+                      }
+
+                      // 4. Render Dropdowns, Text Areas, and Standard Inputs
                       return (
                         <div key={inputName} className="form-group">
-                          <label className="form-label">{field.label} {field.required && '*'}</label>
+                          <label className="form-label fw-bold mb-1">{field.label} {field.required && '*'}</label>
                           
                           {field.type === 'Dropdown' ? (
                             <select
@@ -776,6 +836,7 @@ export default function Registration({ user, regParams, setRegParams, showToast 
                               name={inputName}
                               className="form-control"
                               rows="3"
+                              placeholder={field.placeholder || ''}
                               value={dynamicData[inputName] || ''}
                               onChange={handleDynamicChange}
                               required={field.required}
@@ -788,14 +849,23 @@ export default function Registration({ user, regParams, setRegParams, showToast 
                                 type={field.type === 'Number' ? 'number' : field.type === 'Date' ? 'date' : 'text'}
                                 name={inputName}
                                 className="form-control"
+                                placeholder={field.placeholder || ''}
                                 value={dynamicData[inputName] || ''}
                                 onChange={handleDynamicChange}
                                 required={field.required}
                                 readOnly={isReadOnly}
+                                min={field.type === 'Number' ? (field.minValue || undefined) : undefined}
+                                max={field.type === 'Number' ? (field.maxValue || undefined) : undefined}
                                 style={isReadOnly ? { backgroundColor: 'var(--bg-app)', cursor: 'not-allowed' } : {}}
                               />
                             );
                           })()}
+
+                          {field.helpText && (
+                            <small className="d-block text-muted mt-1">
+                              <i className="bi bi-info-circle"></i> {field.helpText}
+                            </small>
+                          )}
                         </div>
                       );
                     })}
