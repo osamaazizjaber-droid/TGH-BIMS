@@ -200,7 +200,7 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
       name: field.name || '',
       label: field.label || '',
       type: field.type || 'Text',
-      options: field.options || [],
+      options: field.options ? [...field.options] : [],
       required: !!field.required,
       placeholder: field.placeholder || '',
       helpText: field.helpText || '',
@@ -263,7 +263,7 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
       helpText: newField.helpText.trim(),
       minValue: newField.type === 'Number' ? newField.minValue : '',
       maxValue: newField.type === 'Number' ? newField.maxValue : '',
-      options: ['Dropdown', 'Radio'].includes(newField.type) ? newField.options : []
+      options: ['Dropdown', 'Radio'].includes(newField.type) ? [...newField.options] : []
     };
 
     setEditingTemplate(prev => {
@@ -313,7 +313,6 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
       const target = e.target;
       if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT')) {
         e.preventDefault();
-        handleAddField();
       }
     }
   };
@@ -1101,6 +1100,7 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                   e.preventDefault();
+                                  e.stopPropagation();
                                   const val = e.target.value.trim();
                                   if (val && !newField.options.includes(val)) {
                                     setNewField(prev => ({ ...prev, options: [...prev.options, val] }));
