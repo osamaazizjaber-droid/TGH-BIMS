@@ -398,6 +398,7 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
   };
 
   const handleDeleteTemplate = async (name) => {
+    console.log("Delete template clicked for:", name);
     if (!window.confirm(`Are you sure you want to delete template "${name}"?`)) {
       return;
     }
@@ -696,15 +697,16 @@ export default function Activities({ user, onViewChange, setRegParams, showToast
                         <div key={t.templateName} className="col-md-6">
                           <div className="p-3 bg-app rounded border border-light h-100 d-flex flex-column justify-content-between">
                             <div>
-                              <div className="d-flex justify-content-between align-items-start">
-                                <div>
+                              <div className="d-flex justify-content-between align-items-start gap-3">
+                                <div style={{ flex: 1, minWidth: 0 }}>
                                   <h5 className="fw-bold mb-1 text-main">{t.templateName}</h5>
-                                  <p className="small text-muted mb-2">{t.description || 'No description provided.'}</p>
+                                  <p className="small text-muted mb-2" style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>{t.description || 'No description provided.'}</p>
                                 </div>
-                                <div className="d-flex gap-2">
+                                <div className="d-flex gap-2 flex-shrink-0" style={{ position: 'relative', zIndex: 5 }}>
                                   <button 
                                     className="btn btn-sm btn-outline-primary py-1 px-2"
                                     onClick={() => {
+                                      console.log("Edit template clicked:", t.templateName);
                                       setEditingTemplate({
                                         templateName: t.templateName,
                                         description: t.description || '',
